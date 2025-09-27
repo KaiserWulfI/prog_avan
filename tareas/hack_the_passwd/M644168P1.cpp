@@ -1,65 +1,87 @@
-/*
-You have been given a special mission in a simulation game: to hack users’ passwords. Somehow, you have obtained the list of usernames, along with the “method” used to generate passwords from these usernames.
-
-The known details are as follows:
-
-Usernames consist only of uppercase letters and are no longer than 20 characters. Additionally, no user uses any letter more than once in their username.
-
-The password for a given username is generated from the 21 consecutive lexicographical permu-tations of that username, with the original username positioned at the 11th (middle) position in this sequence.
-
-For example, if the username is JORGE, the 21 consecutive lexicographical permutations surround-ing JORGE (with JORGE in the middle) would be, in order:
-
-..., JGERO, JGOER, JGORE, JGREO, JGROE, JOEGR, JOERG, JOGER, JOGRE, JOREG, JORGE,
-
-JREGO, JREOG, JRGEO, JRGOE, JROEG, JROGE, OEGJR, OEGRJ, OEJGR, OEJRG, ...
-
-The password is then determined by selecting the permutation among these 21 consecutive lexi-cographical permutations of the username that has the greatest minimum absolute distance between consecutive letters.
-In case of a tie, the lexicographically smallest permutation is chosen. Finally, the numerical value of that minimum absolute distance is appended to the selected permutation. Thus, for the username JORGE, the password is JREOG8.
-
-Input
-
-The input consists of a list of usernames. You will have to read until the end of the file.
-
-Output
-
-For each username, print a line containing the password for that username.
-
-
-
-Sample Input
-
-JORGE
-
-CARLOS
-
-POMARES
-
-Sample Output
-
-JREOG8
-
-CALROS2
-
-POERSAM1
-*/
-
+#include <algorithm>
+#include <climits>
+#include <fstream>
 #include <iostream>
+#include <vector>
 
-std::string find_password()
-{
-  //TODO: lexicographical representations down 10 - up 10
-  //TODO: Find greatest minimum absolute distance between consecutive letters
-  //TODO: In case of tie the lexicographically smallest permutation is chosen
-  //TODO: Numerical value of minimum absolute distance appended to permutation.
+const bool DEBUG = false;
+
+void print_vector(std::vector<std::string> &vec) {
+  for (std::string elem : vec) {
+    std::cout << elem << " ";
+  }
+  std::cout << std::endl;
 }
 
-int main()
-{
-  //TODO: Read from file
-  std::string username;
+int min_abs_dist(std::string &str) {
+  if (str.size() <= 1) {
+    return 0;
+  }
 
-  std::cin >> username;
+  int min = INT_MAX;
+  for (int i = 0; i + 1 < str.size(); i++) {
+    min = std::min(min, abs(str[i] - str[i + 1]));
+  }
+  return min;
+}
 
+std::string find_password(std::string &usuario) {
 
-  //TODO: find_password
+  std::vector<std::string> lex_perms;
+  std::string s = usuario;
+  {
+    std::string tmp = s;
+    std::vector<std::string> prev;
+    for (int i = 0; i < 10; i++) {
+      if (!std::prev_permutation(tmp.begin(), tmp.end())) {
+        std::prev_permutation(tmp.begin(), tmp.end());
+      }
+      prev.push_back(tmp);
+    }
+    std::reverse(prev.begin(), prev.end());
+
+    lex_perms.insert(lex_perms.end(), prev.begin(), prev.end());
+
+    lex_perms.push_back(s);
+
+    tmp = s;
+    for (int i = 0; i < 10; i++) {
+      if (!std::next_permutation(tmp.begin(), tmp.end())) {
+        std::next_permutation(tmp.begin(), tmp.end());
+      }
+      lex_perms.push_back(tmp);
+    }
+  }
+
+  if (DEBUG) {
+    std::cout << "Full lexicographical\n";
+    print_vector(lex_perms);
+  }
+  int best_min = -1;
+  std::string best_perm;
+  for (std::string str : lex_perms) {
+    int min = min_abs_dist(str);
+    if (min > best_min ||
+        (min == best_min && (best_perm.empty() || str < best_perm))) {
+      best_min = min;
+      best_perm = str;
+    }
+  }
+
+  return best_perm + std::to_string(best_min);
+}
+
+int main() {
+
+  std::ifstream archivo("usuarios.txt");
+  if (archivo.is_open()) {
+    std::string usuario;
+    while (std::getline(archivo, usuario)) {
+      std::cout << find_password(usuario) << std::endl;
+    }
+  } else {
+    std::cout << "Archivo no usuarios.txt no existe";
+    return 1;
+  }
+  return 0;
 }
