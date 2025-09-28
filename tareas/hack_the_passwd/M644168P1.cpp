@@ -1,3 +1,7 @@
+// Alejandro Longoria Gonzalez
+// Matricula: 644168
+// Doy mi palabra que he realizado esta actividad con integridad academica.
+
 #include <algorithm>
 #include <climits>
 #include <fstream>
