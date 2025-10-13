@@ -18,8 +18,8 @@ struct Arista {
   int peso;
 };
 
-void dijkstra(const unordered_map<string, vector<Arista>> &grafo,
-              const string &inicio, const string &fin) {
+void dijkstra(unordered_map<string, vector<Arista>> &grafo, string &inicio,
+              string &fin) {
   if (!grafo.count(inicio) || !grafo.count(fin))
     throw invalid_argument("Uno o ambos nodos no existen en el grafo.");
 

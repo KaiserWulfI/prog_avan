@@ -65,7 +65,7 @@ void marcarPalabra(string &palabra, int x, int y, int dir) {
   }
 }
 
-bool buscar(const string &palabra) {
+bool buscar(string &palabra) {
   if (DEBUG)
     cout << "[DEBUG] Buscando palabra: " << palabra << endl;
   for (int x = 0; x < N; x++) {
