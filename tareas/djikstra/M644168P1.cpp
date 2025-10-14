@@ -48,7 +48,7 @@ void dijkstra(unordered_map<string, vector<Arista>> &grafo, string &inicio,
       cout << "[DEBUG] Visitando nodo: " << nodo << " con distancia "
            << distActual << endl;
 
-    for (const auto &arista : grafo.at(nodo)) {
+    for (Arista &arista : grafo.at(nodo)) {
       int nuevaDist = distActual + arista.peso;
       if (nuevaDist < distancia[arista.destino]) {
         distancia[arista.destino] = nuevaDist;
