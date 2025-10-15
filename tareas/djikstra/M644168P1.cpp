@@ -38,7 +38,8 @@ void dijkstra(unordered_map<string, vector<Arista>> &grafo, string &inicio,
          << endl;
 
   while (!pq.empty()) {
-    auto [distActual, nodo] = pq.top();
+    int distActual = pq.top().first;
+    string nodo = pq.top().second;
     pq.pop();
 
     if (distActual > distancia[nodo])
@@ -87,8 +88,8 @@ int main() {
   try {
     unordered_map<string, vector<Arista>> grafo = {
         {"s", {{"b", 4}, {"c", 2}}},
-        {"b", {{"s", 4}, {"c", 1}, {"d", 5}}},
-        {"c", {{"s", 2}, {"b", 1}, {"d", 8}, {"e", 10}}},
+        {"b", {{"s", 4}, {"d", 5}}},
+        {"c", {{"s", 2}, {"d", 8}, {"e", 10}}},
         {"d", {{"b", 5}, {"c", 8}, {"e", 2}, {"t", 6}}},
         {"e", {{"c", 10}, {"d", 2}, {"t", 2}}},
         {"t", {{"d", 6}, {"e", 2}}}};
